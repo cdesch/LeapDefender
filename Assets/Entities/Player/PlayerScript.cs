@@ -31,7 +31,7 @@ public class PlayerScript : MonoBehaviour
 			Ray ray = Camera.mainCamera.ScreenPointToRay (Input.mousePosition);
 			
 			if (Physics.Raycast (ray, out hit) && hit.transform.name == "Ground") {
-				Crosshair1.localPosition = new Vector3 (hit.point.x, 2, hit.point.z);
+				Crosshair1.localPosition = new Vector3 (hit.point.x, hit.point.y, -2);
 			}
 			
 			if (currentFireCooldown <= 0) {
@@ -40,12 +40,22 @@ public class PlayerScript : MonoBehaviour
 				// Instanciate a bullet
 				if (Bullet != null) {
 					
-					GameObject b = (GameObject)GameObject.Instantiate (Bullet);
+					GameObject bullet = (GameObject)GameObject.Instantiate (Bullet);
 					
-					BulletScript bulletScript = (BulletScript)b.GetComponent ("BulletScript");
+					BulletScript bulletScript = (BulletScript)bullet.GetComponent ("BulletScript");
 					
-					bulletScript.Direction = (Crosshair1.localPosition - this.transform.localPosition);
-					bulletScript.Direction.Normalize ();
+					// Compute direction
+					Vector3 direction = (Crosshair1.localPosition - this.transform.localPosition);
+					direction.z = 0;
+					direction.Normalize ();
+					bulletScript.Direction = new Vector3 (direction.x, direction.y, direction.z);
+					
+					// Rotate to this direction
+					float rotation = Vector3.Angle(this.transform.localPosition, Crosshair1.localPosition);
+					bulletScript.transform.Rotate(0,0,rotation);
+					
+					// Ignore player collider
+					Physics.IgnoreCollision(bullet.collider, collider);
 				}
 			}
 			

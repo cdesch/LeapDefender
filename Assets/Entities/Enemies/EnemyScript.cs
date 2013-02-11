@@ -29,12 +29,12 @@ public class EnemyScript : MonoBehaviour
 			direction.Normalize ();
 
 			// Add a speed vector
-			float xTranslation = direction.x * (Speed.x * Time.deltaTime);
-			float yTranslation = direction.y * (Speed.y * Time.deltaTime);
-			float zTranslation = direction.z * (Speed.z * Time.deltaTime);
+			float xForce = direction.x * (Speed.x * Time.deltaTime);
+			float yForce = direction.y * (Speed.y * Time.deltaTime);
+			float zForce = direction.z * (Speed.z * Time.deltaTime);
 
-			// Move
-			this.transform.Translate (xTranslation, yTranslation, zTranslation);
+			// Move by applying force
+			this.rigidbody.AddForce(xForce, yForce, zForce);
 		}
 	}
 	
@@ -50,7 +50,7 @@ public class EnemyScript : MonoBehaviour
 			// The bullet is destroyed
 			Destroy (collision.gameObject);
 			
-			// Destroy both 
+			// Destroy enemy if no more lives
 			if (Lives <= 0) {
 				Destroy (gameObject);
 			}
