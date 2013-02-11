@@ -32,7 +32,7 @@ public class EnemyScript : MonoBehaviour
 			float xForce = direction.x * (Speed.x * Time.deltaTime);
 			float yForce = direction.y * (Speed.y * Time.deltaTime);
 			float zForce = direction.z * (Speed.z * Time.deltaTime);
-
+			
 			// Move by applying force
 			this.rigidbody.AddForce(xForce, yForce, zForce);
 		}

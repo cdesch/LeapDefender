@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Leap;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -11,30 +12,69 @@ public class PlayerScript : MonoBehaviour
 	public GameObject Bullet;
 	public float FireCooldown;
 	public int Lives;
+	public bool EnableLeapMotion;
 	private float currentFireCooldown;
+	private Controller controller;
 	
 	void Start ()
 	{
 		// Hide mouse :3
-		Screen.showCursor = false;
+		UnityEngine.Screen.showCursor = false;
 		
 		currentFireCooldown = FireCooldown;
+		
+		if (EnableLeapMotion) {
+			controller = new Controller ();
+		}
 	}
 	
 	void Update ()
 	{
 		currentFireCooldown -= Time.deltaTime;
+		bool shoot = false;
 		
 		if (Crosshair1 != null) {
 			
-			RaycastHit hit;
-			Ray ray = Camera.mainCamera.ScreenPointToRay (Input.mousePosition);
+			Vector3 screenPointer = Vector3.zero;
 			
-			if (Physics.Raycast (ray, out hit) && hit.transform.name == "Ground") {
-				Crosshair1.localPosition = new Vector3 (hit.point.x, hit.point.y, -2);
+			// Leap Motion
+			if (EnableLeapMotion && controller.IsConnected) {
+				
+				Frame frame = controller.Frame();
+				
+				if(frame.Fingers.Count > 0)
+				{
+					Finger f = frame.Fingers[0];
+					
+					//Vector tipPositionInScreenCoordinate = f.TipPosition.ToScreenPoint(controller.CalibratedScreens.ClosestScreenHit(f));
+					//Vector tipPositionInScreenCoordinate = f.TipPosition.ToScreenPoint();
+					//Vector3 screenLocation = tipPositionInScreenCoordinate.ToVector3()
+					
+					var screen = controller.CalibratedScreens.ClosestScreenHit(f);
+					Vector v = screen.Intersect(f, true);
+					
+					screenPointer = v.ToScreenPoint(screen).ToVector3 ();
+					
+					// Inverse Y axis
+					screenPointer.y = screen.HeightPixels - screenPointer.y;
+				}
+			} 
+			// Mouse
+			else {
+				screenPointer = Input.mousePosition;
 			}
 			
-			if (currentFireCooldown <= 0) {
+				RaycastHit hit;
+				Ray ray = Camera.mainCamera.ScreenPointToRay (screenPointer);
+			
+				if (Physics.Raycast (ray, out hit) && hit.transform.name == "Ground") {
+					shoot = true;
+					Crosshair1.localPosition = new Vector3 (hit.point.x, hit.point.y, -2);
+				}
+			
+			Debug.Log("Pointer location: "+screenPointer);
+			
+			if (currentFireCooldown <= 0 && shoot) {
 				currentFireCooldown = FireCooldown;	
 				
 				// Instanciate a bullet
@@ -51,14 +91,14 @@ public class PlayerScript : MonoBehaviour
 					bulletScript.Direction = new Vector3 (direction.x, direction.y, direction.z);
 					
 					// Rotate to this direction
-					double rotation = Math.Atan( Crosshair1.localPosition.y / Crosshair1.localPosition.x );
+					double rotation = Math.Atan (Crosshair1.localPosition.y / Crosshair1.localPosition.x);
 					// To degrees
-					float angle = (float)(rotation *(180/Math.PI));
+					float angle = (float)(rotation * (180 / Math.PI));
 					
-					bulletScript.transform.Rotate(0,0,angle);
+					bulletScript.transform.Rotate (0, 0, angle);
 					
 					// Ignore player collider
-					Physics.IgnoreCollision(bullet.collider, collider);
+					Physics.IgnoreCollision (bullet.collider, collider);
 				}
 			}
 			
@@ -79,5 +119,4 @@ public class PlayerScript : MonoBehaviour
 			Debug.Log ("Player lives remaining " + Lives);
 		}
 	}
-
 }

@@ -46,8 +46,12 @@
   <ItemGroup>
      <Compile Include="Assets\Entities\Bullets\BulletScript.cs" />
      <Compile Include="Assets\Entities\Enemies\EnemyScript.cs" />
+     <Compile Include="Assets\Entities\Player\LeapEx.cs" />
      <Compile Include="Assets\Entities\Player\PlayerScript.cs" />
      <Compile Include="Assets\GameScript.cs" />
+ <Reference Include="Assets\Plugins\LeapCSharp.NET3.5">
+ <HintPath>Assets\Plugins\LeapCSharp.NET3.5.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
