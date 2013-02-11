@@ -44,6 +44,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Entities\Bullets\BulletScript.cs" />
      <Compile Include="Assets\Entities\Enemies\EnemyScript.cs" />
      <Compile Include="Assets\Entities\Enemies\GameScript.cs" />
      <Compile Include="Assets\Entities\Player\PlayerScript.cs" />
