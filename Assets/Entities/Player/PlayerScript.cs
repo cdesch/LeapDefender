@@ -10,6 +10,7 @@ public class PlayerScript : MonoBehaviour
 	public Transform Crosshair1;
 	public GameObject Bullet;
 	public float FireCooldown;
+	public int Lives;
 	private float currentFireCooldown;
 	
 	void Start ()
@@ -41,13 +42,29 @@ public class PlayerScript : MonoBehaviour
 					
 					GameObject b = (GameObject)GameObject.Instantiate (Bullet);
 					
-					BulletScript bulletScript = (BulletScript) b.GetComponent("BulletScript");
+					BulletScript bulletScript = (BulletScript)b.GetComponent ("BulletScript");
 					
 					bulletScript.Direction = (Crosshair1.localPosition - this.transform.localPosition);
-					bulletScript.Direction.Normalize();
+					bulletScript.Direction.Normalize ();
 				}
 			}
 			
 		}
 	}
+	
+	void OnCollisionEnter (Collision collision)
+	{
+		
+		if (collision.gameObject.tag == "Enemy") {
+			// An enemy has reached the player!
+			// Lose a life
+			Lives--;
+			
+			// enemy is destroyed
+			Destroy (collision.gameObject);
+			
+			Debug.Log ("Player lives remaining " + Lives);
+		}
+	}
+
 }

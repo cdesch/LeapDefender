@@ -46,8 +46,8 @@
   <ItemGroup>
      <Compile Include="Assets\Entities\Bullets\BulletScript.cs" />
      <Compile Include="Assets\Entities\Enemies\EnemyScript.cs" />
-     <Compile Include="Assets\Entities\Enemies\GameScript.cs" />
      <Compile Include="Assets\Entities\Player\PlayerScript.cs" />
+     <Compile Include="Assets\GameScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
