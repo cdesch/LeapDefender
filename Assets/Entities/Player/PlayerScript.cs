@@ -51,8 +51,11 @@ public class PlayerScript : MonoBehaviour
 					bulletScript.Direction = new Vector3 (direction.x, direction.y, direction.z);
 					
 					// Rotate to this direction
-					float rotation = Vector3.Angle(this.transform.localPosition, Crosshair1.localPosition);
-					bulletScript.transform.Rotate(0,0,rotation);
+					double rotation = Math.Atan( Crosshair1.localPosition.y / Crosshair1.localPosition.x );
+					// To degrees
+					float angle = (float)(rotation *(180/Math.PI));
+					
+					bulletScript.transform.Rotate(0,0,angle);
 					
 					// Ignore player collider
 					Physics.IgnoreCollision(bullet.collider, collider);
